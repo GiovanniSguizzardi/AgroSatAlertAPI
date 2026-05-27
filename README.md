@@ -1,6 +1,6 @@
 # 🛰️ AgroSat Alert
 
-> Plataforma de monitoramento agrícola via satélite — Global Solution 2026 | FIAP
+> Plataforma de monitoramento agrícola via satélite Global Solution 2026 | FIAP
 
 ![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green?style=flat-square&logo=springboot)
