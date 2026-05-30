@@ -1,11 +1,9 @@
-package giovanni_565123.agrosatalert.dto;
+package giovanni_565123.agrosatalert.dto.request;
 
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
-public class AlertaClimaticoDTO {
-
-    private Long id;
+public class AlertaClimaticoRequest {
 
     @NotBlank(message = "Tipo de alerta é obrigatorio")
     @Size(min = 2, max = 100, message = "Tipo de alerta deve ter entre 2 e 100 caracteres")
@@ -31,28 +29,10 @@ public class AlertaClimaticoDTO {
     @NotNull(message = "ID do talhao é obrigatorio")
     private Long talhaoId;
 
-    // Construtores
-    public AlertaClimaticoDTO() {
-    }
+    @NotNull(message = "ID do satelite é obrigatorio")
+    private Long sateliteId;
 
-    public AlertaClimaticoDTO(Long id, String tipoAlerta, Integer severidade, Double impactoEstimado,
-            LocalDate dataEvento, String status, Long talhaoId) {
-        this.id = id;
-        this.tipoAlerta = tipoAlerta;
-        this.severidade = severidade;
-        this.impactoEstimado = impactoEstimado;
-        this.dataEvento = dataEvento;
-        this.status = status;
-        this.talhaoId = talhaoId;
-    }
-
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public AlertaClimaticoRequest() {
     }
 
     public String getTipoAlerta() {
@@ -101,5 +81,13 @@ public class AlertaClimaticoDTO {
 
     public void setTalhaoId(Long talhaoId) {
         this.talhaoId = talhaoId;
+    }
+
+    public Long getSateliteId() {
+        return sateliteId;
+    }
+
+    public void setSateliteId(Long sateliteId) {
+        this.sateliteId = sateliteId;
     }
 }

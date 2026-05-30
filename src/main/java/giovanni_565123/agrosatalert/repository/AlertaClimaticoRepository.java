@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AlertaClimaticoRepository extends JpaRepository<AlertaClimatico, Long> {
     List<AlertaClimatico> findByTalhaoId(Long talhaoId);
+    List<AlertaClimatico> findBySateliteId(Long sateliteId);
 }

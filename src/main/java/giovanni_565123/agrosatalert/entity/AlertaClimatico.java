@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tb_alerta_climatico")
+@Table(name = "alertas_climaticos")
 public class AlertaClimatico {
 
     @Id
@@ -30,21 +30,24 @@ public class AlertaClimatico {
     @JoinColumn(name = "talhao_id", nullable = false)
     private Talhao talhao;
 
-    // Construtores
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "satelite_id", nullable = false)
+    private Satelite satelite;
+
     public AlertaClimatico() {
     }
 
     public AlertaClimatico(String tipoAlerta, Integer severidade, Double impactoEstimado, LocalDate dataEvento,
-            String status, Talhao talhao) {
+            String status, Talhao talhao, Satelite satelite) {
         this.tipoAlerta = tipoAlerta;
         this.severidade = severidade;
         this.impactoEstimado = impactoEstimado;
         this.dataEvento = dataEvento;
         this.status = status;
         this.talhao = talhao;
+        this.satelite = satelite;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -99,5 +102,13 @@ public class AlertaClimatico {
 
     public void setTalhao(Talhao talhao) {
         this.talhao = talhao;
+    }
+
+    public Satelite getSatelite() {
+        return satelite;
+    }
+
+    public void setSatelite(Satelite satelite) {
+        this.satelite = satelite;
     }
 }

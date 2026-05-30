@@ -5,41 +5,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import giovanni_565123.agrosatalert.dto.request.TalhaoRequest;
-import giovanni_565123.agrosatalert.dto.response.TalhaoResponse;
-import giovanni_565123.agrosatalert.service.TalhaoService;
+
+import giovanni_565123.agrosatalert.dto.request.SateliteRequest;
+import giovanni_565123.agrosatalert.dto.response.SateliteResponse;
+import giovanni_565123.agrosatalert.service.SateliteService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/talhoes")
-public class TalhaoController {
+@RequestMapping("/api/v2/satelites")
+public class SateliteController {
 
     @Autowired
-    private TalhaoService service;
+    private SateliteService service;
 
     @GetMapping
-    public ResponseEntity<List<TalhaoResponse>> findAll() {
+    public ResponseEntity<List<SateliteResponse>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TalhaoResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<SateliteResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping("/produtor/{produtorId}")
-    public ResponseEntity<List<TalhaoResponse>> findByProdutorId(@PathVariable Long produtorId) {
-        return ResponseEntity.ok(service.findByProdutorId(produtorId));
-    }
-
     @PostMapping
-    public ResponseEntity<TalhaoResponse> save(@RequestBody @Valid TalhaoRequest request) {
+    public ResponseEntity<SateliteResponse> save(@RequestBody @Valid SateliteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TalhaoResponse> update(@PathVariable Long id, @RequestBody @Valid TalhaoRequest request) {
+    public ResponseEntity<SateliteResponse> update(@PathVariable Long id, @RequestBody @Valid SateliteRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 
@@ -49,3 +45,4 @@ public class TalhaoController {
         return ResponseEntity.noContent().build();
     }
 }
+

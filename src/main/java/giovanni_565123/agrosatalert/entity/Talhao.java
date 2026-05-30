@@ -2,9 +2,10 @@ package giovanni_565123.agrosatalert.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table(name = "tb_talhao")
+@Table(name = "talhoes")
 public class Talhao {
 
     @Id
@@ -26,22 +27,26 @@ public class Talhao {
     @Column(name = "data_cadastro", nullable = false)
     private LocalDate dataCadastro;
 
-    @OneToMany(mappedBy = "talhao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private java.util.List<AlertaClimatico> alertas;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "produtor_id", nullable = false)
+    private Produtor produtor;
 
-    // Construtores
+    @OneToMany(mappedBy = "talhao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<AlertaClimatico> alertas;
+
     public Talhao() {
     }
 
-    public Talhao(String nome, String cultura, Double areaHectares, String localizacao, LocalDate dataCadastro) {
+    public Talhao(String nome, String cultura, Double areaHectares, String localizacao, LocalDate dataCadastro,
+            Produtor produtor) {
         this.nome = nome;
         this.cultura = cultura;
         this.areaHectares = areaHectares;
         this.localizacao = localizacao;
         this.dataCadastro = dataCadastro;
+        this.produtor = produtor;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -90,11 +95,19 @@ public class Talhao {
         this.dataCadastro = dataCadastro;
     }
 
-    public java.util.List<AlertaClimatico> getAlertas() {
+    public Produtor getProdutor() {
+        return produtor;
+    }
+
+    public void setProdutor(Produtor produtor) {
+        this.produtor = produtor;
+    }
+
+    public List<AlertaClimatico> getAlertas() {
         return alertas;
     }
 
-    public void setAlertas(java.util.List<AlertaClimatico> alertas) {
+    public void setAlertas(List<AlertaClimatico> alertas) {
         this.alertas = alertas;
     }
 }

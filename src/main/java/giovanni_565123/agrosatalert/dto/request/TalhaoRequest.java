@@ -1,11 +1,9 @@
-package giovanni_565123.agrosatalert.dto;
+package giovanni_565123.agrosatalert.dto.request;
 
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
-public class TalhaoDTO {
-
-    private Long id;
+public class TalhaoRequest {
 
     @NotBlank(message = "Nome é obrigatorio")
     @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
@@ -27,27 +25,10 @@ public class TalhaoDTO {
     @PastOrPresent(message = "Data de cadastro nao pode ser futura")
     private LocalDate dataCadastro;
 
-    // Construtores
-    public TalhaoDTO() {
-    }
+    @NotNull(message = "ID do produtor é obrigatorio")
+    private Long produtorId;
 
-    public TalhaoDTO(Long id, String nome, String cultura, Double areaHectares, String localizacao,
-            LocalDate dataCadastro) {
-        this.id = id;
-        this.nome = nome;
-        this.cultura = cultura;
-        this.areaHectares = areaHectares;
-        this.localizacao = localizacao;
-        this.dataCadastro = dataCadastro;
-    }
-
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public TalhaoRequest() {
     }
 
     public String getNome() {
@@ -88,5 +69,13 @@ public class TalhaoDTO {
 
     public void setDataCadastro(LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public Long getProdutorId() {
+        return produtorId;
+    }
+
+    public void setProdutorId(Long produtorId) {
+        this.produtorId = produtorId;
     }
 }

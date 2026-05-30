@@ -1,12 +1,17 @@
 package giovanni_565123.agrosatalert.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import giovanni_565123.agrosatalert.dto.AlertaClimaticoDTO;
+
+import giovanni_565123.agrosatalert.dto.request.AlertaClimaticoRequest;
+import giovanni_565123.agrosatalert.dto.response.AlertaClimaticoResponse;
 import giovanni_565123.agrosatalert.entity.AlertaClimatico;
+import giovanni_565123.agrosatalert.entity.Satelite;
 import giovanni_565123.agrosatalert.entity.Talhao;
 import giovanni_565123.agrosatalert.exception.ResourceNotFoundException;
 import giovanni_565123.agrosatalert.repository.AlertaClimaticoRepository;
+import giovanni_565123.agrosatalert.repository.SateliteRepository;
 import giovanni_565123.agrosatalert.repository.TalhaoRepository;
 
 import java.util.List;
@@ -21,45 +26,54 @@ public class AlertaClimaticoService {
     @Autowired
     private TalhaoRepository talhaoRepository;
 
-    public List<AlertaClimaticoDTO> findAll() {
+    @Autowired
+    private SateliteRepository sateliteRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public List<AlertaClimaticoResponse> findAll() {
         return repository.findAll()
                 .stream()
-                .map(this::toDTO)
+                .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
-    public AlertaClimaticoDTO findById(Long id) {
+    public AlertaClimaticoResponse findById(Long id) {
         AlertaClimatico alerta = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alerta nao encontrado com id: " + id));
-        return toDTO(alerta);
+        return toResponse(alerta);
     }
 
-    public List<AlertaClimaticoDTO> findByTalhaoId(Long talhaoId) {
+    public List<AlertaClimaticoResponse> findByTalhaoId(Long talhaoId) {
         return repository.findByTalhaoId(talhaoId)
                 .stream()
-                .map(this::toDTO)
+                .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
-    public AlertaClimaticoDTO save(AlertaClimaticoDTO dto) {
-        Talhao talhao = talhaoRepository.findById(dto.getTalhaoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Talhao nao encontrado com id: " + dto.getTalhaoId()));
-        AlertaClimatico alerta = toEntity(dto, talhao);
-        return toDTO(repository.save(alerta));
+    public AlertaClimaticoResponse save(AlertaClimaticoRequest request) {
+        Talhao talhao = talhaoRepository.findById(request.getTalhaoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Talhao nao encontrado com id: " + request.getTalhaoId()));
+        Satelite satelite = sateliteRepository.findById(request.getSateliteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Satelite nao encontrado com id: " + request.getSateliteId()));
+        AlertaClimatico alerta = modelMapper.map(request, AlertaClimatico.class);
+        alerta.setTalhao(talhao);
+        alerta.setSatelite(satelite);
+        return toResponse(repository.save(alerta));
     }
 
-    public AlertaClimaticoDTO update(Long id, AlertaClimaticoDTO dto) {
+    public AlertaClimaticoResponse update(Long id, AlertaClimaticoRequest request) {
         AlertaClimatico alerta = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alerta nao encontrado com id: " + id));
-        Talhao talhao = talhaoRepository.findById(dto.getTalhaoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Talhao nao encontrado com id: " + dto.getTalhaoId()));
-        alerta.setTipoAlerta(dto.getTipoAlerta());
-        alerta.setSeveridade(dto.getSeveridade());
-        alerta.setImpactoEstimado(dto.getImpactoEstimado());
-        alerta.setDataEvento(dto.getDataEvento());
-        alerta.setStatus(dto.getStatus());
+        Talhao talhao = talhaoRepository.findById(request.getTalhaoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Talhao nao encontrado com id: " + request.getTalhaoId()));
+        Satelite satelite = sateliteRepository.findById(request.getSateliteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Satelite nao encontrado com id: " + request.getSateliteId()));
+        modelMapper.map(request, alerta);
         alerta.setTalhao(talhao);
-        return toDTO(repository.save(alerta));
+        alerta.setSatelite(satelite);
+        return toResponse(repository.save(alerta));
     }
 
     public void delete(Long id) {
@@ -68,24 +82,12 @@ public class AlertaClimaticoService {
         repository.delete(alerta);
     }
 
-    private AlertaClimaticoDTO toDTO(AlertaClimatico alerta) {
-        return new AlertaClimaticoDTO(
-                alerta.getId(),
-                alerta.getTipoAlerta(),
-                alerta.getSeveridade(),
-                alerta.getImpactoEstimado(),
-                alerta.getDataEvento(),
-                alerta.getStatus(),
-                alerta.getTalhao().getId());
-    }
-
-    private AlertaClimatico toEntity(AlertaClimaticoDTO dto, Talhao talhao) {
-        return new AlertaClimatico(
-                dto.getTipoAlerta(),
-                dto.getSeveridade(),
-                dto.getImpactoEstimado(),
-                dto.getDataEvento(),
-                dto.getStatus(),
-                talhao);
+    private AlertaClimaticoResponse toResponse(AlertaClimatico alerta) {
+        AlertaClimaticoResponse response = modelMapper.map(alerta, AlertaClimaticoResponse.class);
+        response.setTalhaoId(alerta.getTalhao().getId());
+        response.setTalhaoNome(alerta.getTalhao().getNome());
+        response.setSateliteId(alerta.getSatelite().getId());
+        response.setSateliteNome(alerta.getSatelite().getNome());
+        return response;
     }
 }
